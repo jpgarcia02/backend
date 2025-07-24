@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from "class-transformer";
+import { Task } from "src/tasks/entities/task.entity";
 
 @Entity()
 export class User {
@@ -40,4 +41,9 @@ export class User {
     })
     @CreateDateColumn()
     createdAt: Date;
+
+    @ApiProperty({ type: () => [Task], description: 'Lista de tareas del usuario' })
+    @OneToMany(() => Task, task => task.user)
+    tasks: Task[];
+
 }
