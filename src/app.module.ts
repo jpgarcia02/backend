@@ -1,20 +1,35 @@
+// src/app.module.ts
+
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { TasksModule } from './tasks/tasks.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
+    // 1) Hacemos global el ConfigModule para leer .env desde cualquier módulo
+    ConfigModule.forRoot({ isGlobal: true }),
+
+    // 2) Conexión a PostgreSQL con TypeORM
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',      // Dirección del contenedor (en Windows con Docker Desktop funciona localhost)
-      port: 5433,             // Puerto mapeado en docker-compose.yml (cambia si es diferente)
-      username: 'nestuser',   // Usuario que configuraste en docker-compose
-      password: 'nestpassword', // Contraseña que pusiste en docker-compose
-      database: 'nestdb',     // Base de datos creada en docker-compose
-      autoLoadEntities: true, // Carga automática de entidades
-      synchronize: true,      // Crea las tablas automáticamente (solo para desarrollo)
+      host: 'localhost',
+      port: 5433,
+      username: 'nestuser',
+      password: 'nestpassword',
+      database: 'nestdb',
+      autoLoadEntities: true,
+      synchronize: true,
     }),
+
+    // 3) Módulos de la aplicación
     UsersModule,
+    AuthModule,
+    TasksModule,
   ],
 })
 export class AppModule {}
